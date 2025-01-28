@@ -2,6 +2,6 @@ body {
     background-color: aquamarine;
 }
 
-#monster-image-intro {
-    scale: 50%;
+#monster-image-intro { /*muuttaa introssa olevan monsterin divin scalea*/
+    scale: 35%;
 }
