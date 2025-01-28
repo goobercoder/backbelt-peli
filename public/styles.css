@@ -1,3 +1,7 @@
 body {
     background-color: aquamarine;
 }
+
+#monster-image-intro {
+    scale: 50%;
+}
