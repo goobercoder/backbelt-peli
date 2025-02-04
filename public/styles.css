@@ -58,3 +58,24 @@ button {
 #start-game-div {
     align-self: center;
 }
+
+#game-screen {
+    display: none;
+}
+
+#game-board {
+    display: grid;
+    gap: 0;
+    background-image: url(images/backgr.png);
+    background-size: cover;
+    background-position: center;
+    width: 50vw;
+    height: 50vw;
+    margin: 10px auto;
+    border: 2px solid #333;
+    background-color: #15dda1;
+}
+
+#dumbass {
+    color: rgb(0, 255, 55);
+}
