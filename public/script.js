@@ -1,5 +1,17 @@
 let BOARD_SIZE = 15;
 let board; //kenttä tallennetaan
+const cellSize = caculateCellSize();
+
+function caculateCellSize() {
+    // Otetaan talteen pienempi luku ikkunan leveydestä ja korkeudesta
+  const screenSize = Math.min(window.innerWidth, window.innerHeight);
+  // Tehdään pelilaudasta hieman tätä pienempi, jotta jää pienet reunat
+  const gameBoardSize = 0.95 * screenSize;
+  // Laudan koko jaetaan ruutujen määrällä, jolloin saadaan yhden ruudun koko
+  return gameBoardSize / BOARD_SIZE;
+
+  //NOT DONE
+}
 
 //tää auttaa 2d arrayn läpimenemisen kanssa.
 function getCell(board, x ,y) {
@@ -24,10 +36,13 @@ function drawBoard(board) {
             gameBoard.appendChild(cell);
         }
     }
-}
+} 
 
 
-function generateRandomBoard(){
+
+
+
+ function generateRandomBoard(){
     const newBoard = Array.from({ length: BOARD_SIZE}, () =>
         Array.apply(BOARD_SIZE).fill(' '));
     // tää koodi tekke arrayn length boadsize ja täyttää joka slotin arraylla jonka koko on boardsize.
@@ -42,7 +57,7 @@ for (let y = 0; y < BOARD_SIZE; y++) {
     }
    } 
    return newBoard;
-}
+} 
 
 document.getElementById("start-game-btn").addEventListener('click', start_gaem);
 
