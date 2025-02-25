@@ -5,8 +5,10 @@ const cellSize = caculateCellSize();
 function caculateCellSize() {
     // Otetaan talteen pienempi luku ikkunan leveydestä ja korkeudesta
   const screenSize = Math.min(window.innerWidth, window.innerHeight);
+
   // Tehdään pelilaudasta hieman tätä pienempi, jotta jää pienet reunat
-  const gameBoardSize = 0.95 * screenSize;
+  const gameBoardSize = 0.97 * screenSize;
+
   // Laudan koko jaetaan ruutujen määrällä, jolloin saadaan yhden ruudun koko
   return gameBoardSize / BOARD_SIZE;
 
@@ -28,6 +30,8 @@ function drawBoard(board) {
         for(let x = 0; x < BOARD_SIZE; x++){
             const cell = document.createElement('div');
             cell.classList.add('cell');
+            cell.style.width = cellSize + 'px';
+            cell.style.height = cellSize + 'px';
 
             if(getCell(board, x, y) === 'W') {
                 cell.classList.add('wall');
@@ -56,6 +60,9 @@ for (let y = 0; y < BOARD_SIZE; y++) {
      }
     }
    } 
+
+
+   generate_tetris(newBoard);
    return newBoard;
 } 
 
@@ -67,5 +74,27 @@ function start_gaem(){
 
     board = generateRandomBoard();
     drawBoard(board);
+}
+
+function generate_tetris(board) {
+    const tetrisBolks = [
+        [[0,0], [0,1], [1,0], [1,1]] //minun vitun kaunis kuutio
+
+    ];
+
+    const positions = [
+        {startX: 13, startY: 13}
+    ];
+    positions.forEach( pos =>  {
+
+        const bolk = tetrisBolks[0];
+
+        for(coordinatePair of bolk){
+            [x, y] = coordinatePair;
+            board[pos.startY + y][pos.startX + x] = 'W';
+        }
+
+    });
+    
 }
 
