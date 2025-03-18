@@ -90,3 +90,13 @@ button {
     background-image: url(images/wall.png);
     background-size: cover;
 }
+
+#monster-selection{
+    align-self: center;
+}
+
+
+.player {
+    background-image: url('images/player.png');
+    background-size: cover;
+}
