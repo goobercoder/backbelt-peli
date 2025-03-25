@@ -2,6 +2,7 @@ let BOARD_SIZE = 15;
 let board; //kenttä talennetaan tähän
 const cellSize = calculateCellSize();
 let player;
+let ghosts = [];
 
 
 class Player {
@@ -15,16 +16,28 @@ class Player {
         //tallennetaan nykyiset koordit
         const currentX = player.x;
         const currentY = player.y;
-        console.log(currentX, currentX);
+        
         //uusi sianti
         
         const newX = currentX + deltaX;
         const newY = currentY + deltaY;
-
-        //päivitys
-        player.x = newX;
-        player.y = newY;
-        console.log(newX, newY);
+        if(getCell(board, newX, newY) === ' ') {
+            //päivitys
+            player.x = newX;
+            player.y = newY;
+        
+            //piirretään muutos 
+            board[currentY][currentX] = ' ';
+            board[newY][newX] = 'P';
+        }
+        
+        drawBoard(board);
+    }
+}
+class Ghost {
+    constructor(x, y, name) {
+        this.x = x;
+        this.y = y;
     }
 }
 document.getElementById("start-game-btn").addEventListener('click', startGame);
@@ -32,16 +45,16 @@ document.getElementById("start-game-btn").addEventListener('click', startGame);
 document.addEventListener('keydown', (event) => {
     console.log("key down")
     switch (event.key){
-        case 'ArrowUp':
+        case 'w':
             player.move(0, -1);
             break
-        case 'ArrowDown':
+        case 's':
             player.move(0, 1);
             break
-        case 'ArrowLeft':
+        case 'a':
             player.move(-1, 0);
             break
-        case 'ArrowRight':
+        case 'd':
             player.move(1, 0);
             break
     }
@@ -63,9 +76,9 @@ function startGame(){
     document.getElementById("intro-screen").style.display = 'none';
     document.getElementById("game-screen").style.display = 'block';
 
+    player = new Player(0,0, "jerry");
     board = generateRandomBoard();
     drawBoard(board);
-    player = new Player(0,0, "jerry");
 }
 
 function getCell(board, x, y) {
@@ -93,10 +106,21 @@ function generateRandomBoard(){
     }
    }
    generateObstacles(newBoard);
+   ghosts = [];
+   for (let i = 0; i < 5; i++){
+    const [ghostX, ghostY] = randomEmptyPosition(newBoard);
+    console.log(ghostX, ghostY);
+    setCell(newBoard, ghostX, ghostY, 'H');
+    ghosts.push(new Ghost(ghostX, ghostY));
+    console.log(ghosts);
+   }
+
+   
 
    const [playerX, playerY] = randomEmptyPosition(newBoard);
    setCell(newBoard, playerX, playerY, 'P');
-
+   player.x = playerX;
+   player.y = playerY;
    
    return newBoard;
 
@@ -104,7 +128,7 @@ function generateRandomBoard(){
 
 function drawBoard(board) {
     const gameBoard = document.getElementById('game-board');
-
+    gameBoard.innerHTML = ' ';
     //Asetataan grid sarakkeet ja rivit dynaamisesti BOARD_SIZEN mukaan
     gameBoard.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 1fr)`;
 
@@ -124,11 +148,15 @@ for (let y = 0; y< BOARD_SIZE; y++){
             cell.classList.add('player')
         }
 
+        else if (getCell(board, x, y)=== 'H') {
+            cell.classList.add('Ghost')
+        }
+
         gameBoard.appendChild(cell);
         
     }
 }
-
+    
 }
 
 function generateObstacles(board){

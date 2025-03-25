@@ -100,3 +100,8 @@ button {
     background-image: url('images/player.png');
     background-size: cover;
 }
+
+.Ghost {
+    background-image: url('images/monster.png');
+    background-size: cover;
+}
