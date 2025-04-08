@@ -57,6 +57,24 @@ document.addEventListener('keydown', (event) => {
         case 'd':
             player.move(1, 0);
             break
+
+
+        case 'w':
+        shootAt(player.x, player.y - 1);
+        break;
+
+        case 's':
+        shootAt(player.x, player.y + 1);
+        break;
+
+        case 'a':
+        shootAt(player.x -1, player.y);
+        break;
+
+        case 'd':
+        shootAt(player.x + 1, player.y);
+        break;
+
     }
     event.preventDefault();
 });
@@ -152,6 +170,20 @@ for (let y = 0; y< BOARD_SIZE; y++){
             cell.classList.add('Ghost')
         }
 
+
+        else if (getCell(board, x, y)=== 'B') {
+
+            cell.classList.add('bullet')
+
+            setTimeout(()=> {
+
+              setCell(board, x, y, ' ')  
+
+            }, 500);
+
+        }
+
+
         gameBoard.appendChild(cell);
         
     }
@@ -205,4 +237,37 @@ function randomEmptyPosition(board){
     } else  {
         return randomEmptyPosition(board);
     }
+}
+function shootAt(x,y){
+
+
+
+    if(getCell(board,x,y) === 'W'){
+
+        return;
+
+    }
+
+    const ghostIndex = ghosts.findIndex(ghost => ghost.x === x && ghost.y === y );
+
+    if (ghostIndex !== -1) {
+
+        ghosts.splice(ghostIndex, 1);
+
+    }
+
+    console.log(ghosts);
+
+    setCell(board, x, y, 'B');
+
+    drawBoard(board);
+
+    if (ghosts.length === 0){
+
+        alert('kaikki ammuttu');
+
+    }
+
+   
+
 }
