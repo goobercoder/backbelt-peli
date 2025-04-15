@@ -39,7 +39,59 @@ class Ghost {
         this.x = x;
         this.y = y;
     }
-}
+
+    moveToPlayer(player, board){
+        let deltaX = player.x - this.x;
+        let deltaY = player.y - this.y;
+
+        let moves = [];
+
+        if(Math.abs(deltaX) > Math.abs(deltaY)){
+            if(deltaX > 0)
+                moves.push({x: this.x + 1, y: this.y}) //oikea
+            
+            else
+                moves.push({x: this.x - 1, y: this.y}) //vasen
+            
+            if(deltaY > 0)
+                moves.push({x: this.x, y: this.y + 1}) //alas
+            
+            else
+                moves.push({x: this.x, y: this.y - 1}) //ylös
+            
+        }
+        else{
+            if(deltaY > 0)
+                moves.push({x: this.x, y: this.y + 1}) //alas
+            
+            else
+                moves.push({x: this.x, y: this.y - 1}) //ylös
+
+            if(deltaX > 0)
+                moves.push({x: this.x + 1, y: this.y}) //oikea
+                
+            else
+                moves.push({x: this.x - 1, y: this.y}) //vasen
+        
+        }
+        
+        const validNewPositions = moves.filter(newPosition =>
+            newPosition.x >= 0 && newPosition.x < BOARD_SIZE &&
+            newPosition.y >= 0 && newPosition.y < BOARD_SIZE &&
+            board[newPosition.y][newPosition.x] === ' ' // Tarkista, että ruutu on tyhjä
+        );
+
+        if(validNewPositions.length === 0){
+            return{x: this.x, y: this.y};
+        }
+
+        for(let move of validNewPositions){
+            return move;
+        }
+        
+    }
+};
+
 document.getElementById("start-game-btn").addEventListener('click', startGame);
 
 document.addEventListener('keydown', (event) => {
@@ -278,7 +330,13 @@ function moveGhosts(){
 
     ghosts.forEach(ghost => {
 
+        const newPosition = ghost.moveToPlayer(player, board);
+
+        ghost.x = newPosition.x;
+        ghost.y = newPosition.y;
+
         // määrittelee mahdolliset uudet paikat    
+        /*tämä on randomi liike jota ei käytetä
         const possibleNewPositions = [
             { x: ghost.x, y: ghost.y - 1 }, // Ylös
             { x: ghost.x, y: ghost.y + 1 }, // Alas
@@ -301,7 +359,7 @@ function moveGhosts(){
             // päivitetään haamun uusi paikka    
             ghost.x = randomNewPosition.x;
             ghost.y = randomNewPosition.y;
-        }
+        }*/
 
         setCell(board, ghost.x, ghost.y, 'H');
 
