@@ -39,8 +39,8 @@ class Ghost {
         this.x = x;
         this.y = y;
     }
-
-    moveToPlayer(player, board){
+    //ghost 'ai' moves to player
+    moveToPlayer(player, board, oldGhosts){
         let deltaX = player.x - this.x;
         let deltaY = player.y - this.y;
 
@@ -74,28 +74,23 @@ class Ghost {
                 moves.push({x: this.x - 1, y: this.y}) //vasen
         
         }
-        
-        const validNewPositions = moves.filter(newPosition =>
-            newPosition.x >= 0 && newPosition.x < BOARD_SIZE &&
-            newPosition.y >= 0 && newPosition.y < BOARD_SIZE &&
-            board[newPosition.y][newPosition.x] === ' ' // Tarkista, että ruutu on tyhjä
-        );
-
-        if(validNewPositions.length === 0){
-            return{x: this.x, y: this.y};
+        //wall, player and other ghost detection
+        for(let move of moves) {
+            if(board[move.y][move.x] === ' ' || board[move.y][move.x] === 'P' 
+                && !oldGhosts.some( h => h.x === move.x && h.y === move.y)) {
+                    return move;
+            }
         }
+        return {x: this.x, y: this.y}
 
-        for(let move of validNewPositions){
-            return move;
-        }
-        
+
     }
 };
 
 document.getElementById("start-game-btn").addEventListener('click', startGame);
 
 document.addEventListener('keydown', (event) => {
-    console.log("key down")
+    console.log("key down") //detect key presses
     switch (event.key){
         case 'w':
             player.move(0, -1);
@@ -108,6 +103,9 @@ document.addEventListener('keydown', (event) => {
             break
         case 'd':
             player.move(1, 0);
+            break
+        case 'b': //this is a dev tool
+            console.log(board);
             break
 
 
@@ -152,7 +150,7 @@ function startGame(){
     setInterval(moveGhosts, ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast);
     drawBoard(board);
 }
-
+//helper functions for setting cells and getting cell info
 function getCell(board, x, y) {
     return board[y][x];
 }
@@ -248,7 +246,7 @@ for (let y = 0; y< BOARD_SIZE; y++){
 
 function generateObstacles(board){
 
-    const obstacles = [
+    const obstacles = [ //all possible walls
         [[0,0], [0,1], [1,0], [1,1]], // neliö
         [[0,0], [0,1], [0,2], [0,3]],// I
         [[0,0], [1,0], [2,0], [1,1]], //T
@@ -281,7 +279,7 @@ function generateObstacles(board){
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
    }
-
+//find random empty position
 function randomEmptyPosition(board){
 
     x = randomInt(1, BOARD_SIZE - 2);
@@ -330,7 +328,7 @@ function moveGhosts(){
 
     ghosts.forEach(ghost => {
 
-        const newPosition = ghost.moveToPlayer(player, board);
+        const newPosition = ghost.moveToPlayer(player, board, oldGhosts);
 
         ghost.x = newPosition.x;
         ghost.y = newPosition.y;
@@ -363,12 +361,33 @@ function moveGhosts(){
 
         setCell(board, ghost.x, ghost.y, 'H');
 
+
+        if(ghost.x === player.x && ghost.y === player.y) {
+            endGame();
+            return;
+        }
     });
 
     oldGhosts.forEach( ghost => {
         board[ghost.y][ghost.x] = ' '; // poistetaan vanhan haamun sijainti
     });
 
+    ghosts.forEach(ghost => {
+        board[ghost.y][ghost.x] = 'H';
+    });
+
+    
+
     drawBoard(board);
+
+}
+//ends game
+//we still need to work on this week 11 cuz ghosts dont stop eating player after endame
+//so we still need to reset board in this function i think
+function endGame(){
+    alert('olit vitun noobi ja kuolit')
+    //muutetaan taas alkunäyttöön
+    document.getElementById("intro-screen").style.display = 'block';
+    document.getElementById("game-screen").style.display = 'none';
 
 }
