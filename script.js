@@ -6,6 +6,7 @@ let ghosts = [];
 let ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast = 1000;
 let isGameRunning = false;
 let ghostInterval;
+let points = 0;
 
 class Player {
     constructor(x, y, name) {
@@ -35,6 +36,11 @@ class Player {
         
         drawBoard(board);
     }
+}
+
+function updateScoreBoard() {
+    const score = document.getElementById('score');
+    score.textContent = `score: ${score}`;
 }
 class Ghost {
     constructor(x, y, name) {
