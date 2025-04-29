@@ -4,6 +4,8 @@ const cellSize = calculateCellSize();
 let player;
 let ghosts = [];
 let ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast = 1000;
+let isGameRunning = false;
+let ghostInterval;
 
 class Player {
     constructor(x, y, name) {
@@ -91,41 +93,42 @@ document.getElementById("start-game-btn").addEventListener('click', startGame);
 
 document.addEventListener('keydown', (event) => {
     console.log("key down") //detect key presses
-    switch (event.key){
-        case 'w':
-            player.move(0, -1);
-            break
-        case 's':
-            player.move(0, 1);
-            break
-        case 'a':
-            player.move(-1, 0);
-            break
-        case 'd':
-            player.move(1, 0);
-            break
-        case 'b': //this is a dev tool
-            console.log(board);
-            break
+    if(isGameRunning){
+        switch (event.key){
+            case 'w':
+                player.move(0, -1);
+                break
+            case 's':
+                player.move(0, 1);
+                break
+            case 'a':
+                player.move(-1, 0);
+                break
+            case 'd':
+                player.move(1, 0);
+                break
+            case 'b': //this is a dev tool
+                console.log(board);
+                break
 
 
-        case 'ArrowUp':
-            shootAt(player.x, player.y - 1);
-            break;
+            case 'ArrowUp':
+                shootAt(player.x, player.y - 1);
+                break;
 
-        case 'ArrowDown':
-            shootAt(player.x, player.y + 1);
-            break;
+            case 'ArrowDown':
+                shootAt(player.x, player.y + 1);
+                break;
 
-        case 'ArrowLeft':
-            shootAt(player.x -1, player.y);
-            break;
+            case 'ArrowLeft':
+                shootAt(player.x -1, player.y);
+                break;
 
-        case 'ArrowRight':
-            shootAt(player.x + 1, player.y);
-            break;
+            case 'ArrowRight':
+                shootAt(player.x + 1, player.y);
+                break;
 
-    }
+        }}
     event.preventDefault();
 });
 
@@ -141,13 +144,14 @@ function calculateCellSize(){
 }
 
 function startGame(){
+    isGameRunning = true;
     document.getElementById("intro-screen").style.display = 'none';
     document.getElementById("game-screen").style.display = 'block';
 
     player = new Player(0,0, "jerry");
     board = generateRandomBoard();
 
-    setInterval(moveGhosts, ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast);
+    ghostInterval = setInterval(moveGhosts, ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast);
     drawBoard(board);
 }
 //helper functions for setting cells and getting cell info
@@ -389,5 +393,7 @@ function endGame(){
     //muutetaan taas alkunäyttöön
     document.getElementById("intro-screen").style.display = 'block';
     document.getElementById("game-screen").style.display = 'none';
+    isGameRunning = false;
+    clearInterval(ghostInterval);
 
 }
