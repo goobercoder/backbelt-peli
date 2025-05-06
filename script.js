@@ -40,7 +40,7 @@ class Player {
 
 function updateScoreBoard() {
     const score = document.getElementById('score');
-    score.textContent = `score: ${score}`;
+    score.textContent = `score: ${points}`;
 }
 class Ghost {
     constructor(x, y, name) {
@@ -153,12 +153,19 @@ function startGame(){
     isGameRunning = true;
     document.getElementById("intro-screen").style.display = 'none';
     document.getElementById("game-screen").style.display = 'block';
+    document.getElementById("score").style.display = 'block';
 
     player = new Player(0,0, "jerry");
     board = generateRandomBoard();
 
-    ghostInterval = setInterval(moveGhosts, ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast);
     drawBoard(board);
+    setTimeout(() => {
+        //Laitetaan haamut liikkumaan sekunnin välein
+        ghostInterval = setInterval(moveGhosts, ghostgofaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaastfaaaaaaaaaaaaaaaaaaaaaaaaaaaaast)
+        }, 1000);
+    points = 0;
+    updateScoreBoard(0);
+
 }
 //helper functions for setting cells and getting cell info
 function getCell(board, x, y) {
@@ -314,6 +321,8 @@ function shootAt(x,y){
     const ghostIndex = ghosts.findIndex(ghost => ghost.x === x && ghost.y === y );
 
     if (ghostIndex !== -1) {
+        points += 50;
+        updateScoreBoard();
 
         ghosts.splice(ghostIndex, 1);
 
@@ -326,7 +335,7 @@ function shootAt(x,y){
     drawBoard(board);
 
     if (ghosts.length === 0){
-        alert('kaikki ammuttu');
+        startNextLevel();
     }
 
 }
@@ -399,7 +408,27 @@ function endGame(){
     //muutetaan taas alkunäyttöön
     document.getElementById("intro-screen").style.display = 'block';
     document.getElementById("game-screen").style.display = 'none';
+    document.getElementById("score").style.display = 'none';
+    points = 0;
+    updateScoreBoard();
     isGameRunning = false;
     clearInterval(ghostInterval);
 
+}
+
+function startNextLevel() {
+    alert('Level Up! now you can die even better.');
+    
+    // Generoi uusi pelikenttä
+    board = generateRandomBoard();
+    drawBoard(board);
+    
+    ghostSpeed = ghostSpeed*0.9;
+    // Pysäytä vanha intervalli ja käynnistä uusi nopeammin
+    clearInterval(ghostInterval);
+     //Haamut alkavat liikkumaan sekunnin päästä startin painamisesta
+   setTimeout(() => {
+    //Laitetaan haamut liikkumaan sekunnin välein
+    ghostInterval = setInterval(moveGhosts, ghostSpeed)
+    }, 1000);
 }
